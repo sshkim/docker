@@ -17,7 +17,7 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 WORKDIR /var/task
 
-RUN pip install pip==9.0.3
+RUN pip install -U pip setuptools wheel
 
 CMD ['zappa']
 
