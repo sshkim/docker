@@ -7,6 +7,12 @@ USER root
 RUN set -ex \
     && curl -fsSL https://get.docker.com -o get-docker.sh \
     && sh get-docker.sh
+    
+RUN apt-get install -yqq vim \
+    && pip install -U pip setuptools wheel \
+    && pip install awscli
+
+# aws cli
 
 RUN usermod -aG docker jenkins
 
