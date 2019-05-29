@@ -8,11 +8,11 @@ RUN set -ex \
     && curl -fsSL https://get.docker.com -o get-docker.sh \
     && sh get-docker.sh
     
-RUN apt-get install -yqq vim \
-    && pip install -U pip setuptools wheel \
-    && pip install awscli
+RUN apt-get install -yqq vim 
 
-# aws cli
+RUN curl -O https://bootstrap.pypa.io/get-pip.py \
+    && python get-pip.py \
+    && pip install awscli
 
 RUN usermod -aG docker jenkins
 
