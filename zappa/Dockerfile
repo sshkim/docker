@@ -5,13 +5,17 @@ RUN yum -y install wget
 WORKDIR /tmp
 
 RUN wget -qO- https://get.haskellstack.org/ | sh
-RUN wget https://hackage.haskell.org/package/pandoc-1.17.0.3/pandoc-1.17.0.3.tar.gz && \
-	tar xvzf pandoc-1.17.0.3.tar.gz
+RUN wget https://hackage.haskell.org/package/pandoc-1.17.0.3/pandoc-1.17.0.3.tar.gz \ 
+	&& tar xvzf pandoc-1.17.0.3.tar.gz
 
 WORKDIR pandoc-1.17.0.3
 
-RUN stack setup && \
-	stack install
+RUN stack setup \
+	&& stack install
+
+WORKDIR /tmp
+
+RUN rm -rf pandoc-1.17.0.3*
 
 ENV PATH="/root/.local/bin:${PATH}"
 
