@@ -1,24 +1,29 @@
-FROM mligus/zappa:python3.6
+FROM lambci/lambda:build-python3.6
 
-RUN yum -y install wget
+MAINTAINER "sshkim" <sshkim88@gmail.com>
+
+ENV PATH $PATH:/root/.local/bin
+
+RUN pip3 install -U pip \
+        && pip3 install -U zappa awscli
 
 WORKDIR /tmp
 
-RUN wget -qO- https://get.haskellstack.org/ | sh
-RUN wget https://hackage.haskell.org/package/pandoc-1.17.0.3/pandoc-1.17.0.3.tar.gz \ 
-	&& tar xvzf pandoc-1.17.0.3.tar.gz \
-	&& rm pandoc-1.17.0.3.tar.gz
-
-WORKDIR pandoc-1.17.0.3
-
-RUN stack setup \
-	&& stack install
-
-ENV PATH="/root/.local/bin:${PATH}"
+RUN yum -y install wget \
+        && wget -qO- https://get.haskellstack.org/ | sh \
+        && wget https://hackage.haskell.org/package/pandoc-1.17.0.3/pandoc-1.17.0.3.tar.gz \
+        && tar -xzf pandoc-1.17.0.3.tar.gz \
+        && ( cd pandoc-1.17.0.3 && stack setup && stack install ) \
+        && rm -rf pandoc* \
+        && rm -rf /root/.stack/
 
 WORKDIR /var/task
 
-RUN pip install -U pip setuptools wheel
+RUN python -m venv /var/venv && \
+    source /var/venv/bin/activate && \
+    pip install -U pip && \
+    deactivate
 
-CMD ['zappa']
+COPY files/.bashrc /root/.bashrc
 
+CMD ["bash"]
